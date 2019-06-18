@@ -24,3 +24,10 @@ docker exec kafka_kafka_2 kafka-console-consumer.sh --topic topic001 --bootstrap
 
 9. 開啟一個新的視窗，執行如下命令，進入生產訊息的命令列模式
 docker exec -it kafka_kafka_1 kafka-console-producer.sh --topic topic001 --broker-list kafka_kafka_1:9092,kafka_kafka_2:9092,kafka_kafka_3:9092,kafka_kafka_4:9092
+
+PS. 常用指令
+1. 停止所有的容器
+docker stop $(docker ps -aq)
+
+2. 删除所有的容器
+docker rm $(docker ps -aq)
