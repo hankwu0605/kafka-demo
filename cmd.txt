@@ -1,0 +1,26 @@
+1. 開啟power shell，切換到目錄 ..\kafka-demo\kafka
+cd D:\workspace\kafka-demo\kafka
+
+2. 啟動容器
+docker-compose up -d
+
+3. 執行命令docker ps，可見啟動了一個zookeeper和一個kafka容器
+docker ps
+
+4. 在docker-compose.yml所在的資料夾下，執行以下命令即可將borker總數從1個擴充套件到4個
+docker-compose scale kafka=4
+
+5. 執行命令docker ps，可見kafka容器已經擴充套件到4個
+docker ps
+
+6. 建立一個topic，名為topic001，4個partition，副本因子2，執行以下命令即可：
+docker exec kafka_kafka_1 kafka-topics.sh --create --topic topic001 --partitions 4 --zookeeper zookeeper:2181 --replication-factor 2
+
+7. 在容器kafka_kafka_3執行以下命令檢視剛剛建立的topic
+docker exec kafka_kafka_3 kafka-topics.sh --list --zookeeper zookeeper:2181
+
+8. 執行如下命令，即可進入等待topic為topic001訊息的狀態，目前還沒有生產訊息，因此控制檯不會有內容輸出
+docker exec kafka_kafka_2 kafka-console-consumer.sh --topic topic001 --bootstrap-server kafka_kafka_1:9092,kafka_kafka_2:9092,kafka_kafka_3:9092,kafka_kafka_4:9092
+
+9. 開啟一個新的視窗，執行如下命令，進入生產訊息的命令列模式
+docker exec -it kafka_kafka_1 kafka-console-producer.sh --topic topic001 --broker-list kafka_kafka_1:9092,kafka_kafka_2:9092,kafka_kafka_3:9092,kafka_kafka_4:9092
